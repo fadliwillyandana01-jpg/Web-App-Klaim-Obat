@@ -1,0 +1,20 @@
+# Environment variables (SANGAT PENTING: Jangan push password!)
+.env
+.env.*
+!.env.example
+
+# Third-party libraries (Besar dan tidak perlu di-push)
+/vendor/
+
+# Temporary & User Uploads (Keamanan data klaim/log)
+/writable/debugbar/
+/writable/cache/
+/writable/session/
+/writable/logs/
+/writable/uploads/
+
+# Tooling & System files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
