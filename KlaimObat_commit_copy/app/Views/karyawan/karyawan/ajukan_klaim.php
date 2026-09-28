@@ -159,17 +159,30 @@
                 <form action="<?= base_url('karyawan/medical-claim/submit') ?>" method="post" enctype="multipart/form-data">
                     <?= csrf_field() ?>
 
+                    <?php
+                    // $dependents dikirim oleh MedicalClaimController::create().
+                    // Ditulis dengan "?? []" supaya view tetap aman (tidak error
+                    // "Undefined variable") bila halaman ini dirender tanpa data.
+                    $dependents = $dependents ?? [];
+                    ?>
+
                     <div class="mb-3">
                         <label class="form-label">Tanggungan</label>
                         <select name="dependent_id" id="dependent" class="form-select" required>
-                            <option value="">-- Pilih Tanggungan --</option>
-                            <option value="">Diri Sendiri (Karyawan)</option>
+                            <option value="" disabled selected>-- Pilih Tanggungan --</option>
+                            <!-- value "0" = diri sendiri; di controller nilai falsy otomatis disimpan sebagai NULL -->
+                            <option value="0">Diri Sendiri (Karyawan)</option>
                             <?php foreach ($dependents as $d) : ?>
-                                <option value="<?= $d['id'] ?>">
-                                    <?= $d['name'] ?> (<?= $d['relationship'] ?>)
+                                <option value="<?= esc($d['dependent_id'], 'attr') ?>">
+                                    <?= esc($d['full_name']) ?> (<?= esc($d['relationship']) ?>)
                                 </option>
                             <?php endforeach; ?>
                         </select>
+                        <?php if (empty($dependents)) : ?>
+                            <div class="form-text">
+                                Belum ada data tanggungan terdaftar. Pilih "Diri Sendiri (Karyawan)" bila klaim atas nama sendiri.
+                            </div>
+                        <?php endif; ?>
                     </div>
 
                     <div class="mb-3">
